@@ -7,6 +7,8 @@ export const getAllProductDB = () => {
 
 export const getProductByIdDB = (productId) => {
   const query = `SELECT * FROM supermart.products where product_id=${productId}`;
+
+  console.log(query);
   return executeQuery(query);
 };
 

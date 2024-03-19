@@ -4,7 +4,7 @@ import {
   _getAllProducts,
   _getProductById,
   _getProductByName,
-} from "../service/product-service";
+} from "./product-service";
 
 export const getProducts = (req, res, next) => {
   _getAllProducts()
@@ -17,7 +17,7 @@ export const getProduct = (req, res, next) => {
   console.log(productId);
   _getProductById(productId)
     .then((product) => {
-      if (product.length > 0) {
+      if (product) {
         res.status(200).send({ product });
       } else {
         res.status(404).send({
