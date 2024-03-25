@@ -1,0 +1,1 @@
+export const returnData = (isFound,rowData)=>({isFound,data:rowData})

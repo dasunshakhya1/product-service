@@ -5,27 +5,24 @@ import {
   _getProductByName,
 } from "../services/product-service";
 
-export const getProducts = (req, res, next) => {
-  _getAllProducts()
-    .then((products) => res.status(200).send({ products }))
-    .catch((err) => next(err));
+export const getProducts = async (req, res, next) => {
+  try {
+    const { isFound, products } = await _getAllProducts();
+    res.status(200).send({ products });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getProduct = async (req, res, next) => {
   const productId = req.params.productId;
 
-  _getProductById(productId)
-    .then((product) => {
-      if (product === null) {
-        res.status(200).send({ product });
-      } else {
-        res.status(404).send({
-          message: `Product with ${productId} not found`,
-          status: "Not Found",
-        });
-      }
-    })
-    .catch((error) => next(error));
+  const { isFound, product } = await _getProductById(productId);
+  if (isFound) {
+    res.status(200).send({ product });
+  } else {
+    res.status(404).send({ message: `Product with ${productId} not found` });
+  }
 };
 
 export const addProduct = (req, res, next) => {

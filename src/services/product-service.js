@@ -6,28 +6,15 @@ import {
 } from "../repositories/product-repository";
 
 export const _getAllProducts = async () => {
-  const rows = await getAllProductDB();
-  const products = [];
+  const { isFound, data } = await getAllProductDB();
 
-  rows.forEach((r) => {
-    const { product_id, price, name } = r;
-    products.push({ product_id, price, name });
-  });
-
-  return products;
+  return { isFound, products: data };
 };
 
 export const _getProductById = async (productId) => {
-  const [rows] = await getProductByIdDB(productId);
-  if (rows) {
-    const { product_id, name, price } = rows;
-    return {
-      product_id,
-      name,
-      price,
-    };
-  }
-  return {};
+  const { isFound, data } = await getProductByIdDB(productId);
+
+  return { isFound, product: data };
 };
 
 export const _createProduct = ({ name, price }) => {
