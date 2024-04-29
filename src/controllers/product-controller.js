@@ -17,9 +17,9 @@ export const getProducts = async (req, res, next) => {
 export const getProduct = async (req, res, next) => {
   const productId = req.params.productId;
 
-  const { isFound, product } = await _getProductById(productId);
+  const { isFound, products } = await _getProductById(productId);
   if (isFound) {
-    res.status(200).send({ product });
+    res.status(200).send({ products });
   } else {
     res.status(404).send({ message: `Product with ${productId} not found` });
   }
@@ -45,11 +45,11 @@ export const getProductByName = (req, res, next) => {
   const { name } = req.body;
   _getProductByName(name)
     .then((product) => {
-      if (product.length > 0) {
-        res.status(200).send({ product });
+      if (product.isFound) {
+        res.status(200).send({ products : product.products });
       } else {
         res.status(404).send({
-          message: `Product with ${productId} not found`,
+          message: `Product with ${name} not found`,
           status: "Not Found",
         });
       }

@@ -46,8 +46,6 @@ describe("Verify product service", () => {
   });
 
   it("Verify /product POST route. Should not get success response when creating an existing product", async () => {
-  
-
     jest
       .spyOn(productRepo, "getProductByIdDB")
       .mockReturnValueOnce({ isFound: true, data: products[0] });
@@ -68,6 +66,70 @@ describe("Verify product service", () => {
     expect(results).toEqual({
       isCreated: false,
       products: products[0],
+    });
+  });
+
+  it("Verify /product/name POST route.Should get success response with data", async () => {
+    jest
+      .spyOn(productRepo, "getProductByNameDB")
+      .mockReturnValueOnce({ isFound: true, data: products[0] });
+
+    const results = await productService._getProductByName({
+      name: "Mars 12g Chocolate",
+    });
+
+    expect(productRepo.getProductByNameDB).toHaveBeenCalledTimes(1);
+    expect(results).toEqual({
+      isFound: true,
+      products: products[0],
+    });
+  });
+
+  it("Verify /product/name POST route.Should not get success response with data", async () => {
+    jest
+      .spyOn(productRepo, "getProductByNameDB")
+      .mockReturnValueOnce({ isFound: false, data: {} });
+
+    const results = await productService._getProductByName({
+      name: "Mars 12g Chocolate",
+    });
+
+    expect(productRepo.getProductByNameDB).toHaveBeenCalledTimes(1);
+    expect(results).toEqual({
+      isFound: false,
+      products: {},
+    });
+  });
+
+  it("Verify /product/{product_Id} GET route.Should get success response with data", async () => {
+    jest
+      .spyOn(productRepo, "getProductByIdDB")
+      .mockReturnValueOnce({ isFound: true, data: products[0] });
+
+    const results = await productService._getProductById({
+      name: "MARS_12G",
+    });
+
+    expect(productRepo.getProductByIdDB).toHaveBeenCalledTimes(1);
+    expect(results).toEqual({
+      isFound: true,
+      products: products[0],
+    });
+  });
+
+  it("Verify /product/{product_Id} GET route.Should not get success response with data", async () => {
+    jest
+      .spyOn(productRepo, "getProductByIdDB")
+      .mockReturnValueOnce({ isFound: false, data: {} });
+
+    const results = await productService._getProductById({
+      name: "MARS_12G",
+    });
+
+    expect(productRepo.getProductByIdDB).toHaveBeenCalledTimes(1);
+    expect(results).toEqual({
+      isFound: false,
+      products: {},
     });
   });
 });

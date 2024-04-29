@@ -29,8 +29,11 @@ export const createProductDB = async ({ id, name, measureUnit, volume }) => {
   return returnData(false, {});
 };
 
-export const getProductByNameDB = (productName) => {
-  const query = `SELECT *  FROM supermart.product WHERE name='${productName}'`;
-
-  return executeQuery(query);
+export const getProductByNameDB =async (productName) => {
+  const query = `SELECT *  FROM supermart.product WHERE product_name='${productName}'`;
+  const rows = await executeQuery(query);
+  if (rows.length > 0) {
+    return returnData(true,rows[0])
+  }
+   return returnData(false, {});
 };
