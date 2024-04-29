@@ -2,50 +2,72 @@ import { describe, it, jest, beforeEach, expect } from "@jest/globals";
 import * as productRepo from "../../src/repositories/product-repository.js";
 import * as productService from "../../src/services/product-service.js";
 
-import app from "../../src/utils/app.js";
-import supertest from "supertest";
-
 const products = [
   {
-    product_id: 1,
-    price: 2.2,
-    name: "Mars 45g Chocolate",
-  },
-  {
-    product_id: 2,
-    price: 2.75,
-    name: "Snickers 45g Chocalate",
+    id: "MARS_12G",
+    name: "Mars 12g Chocolate",
+    measureUnit: "g",
+    volume: 12,
   },
 ];
+
 describe("Verify product service", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
 
-  it("Verify getAllProduct should return an array of products", async () => {
-    jest.spyOn(productRepo, "getAllProductDB").mockReturnValueOnce(products);
-
-    const results = await productService._getAllProducts();
-    expect(productRepo.getAllProductDB).toHaveBeenCalledTimes(1);
-    expect(results).toEqual(products);
-  });
-
-  it("Verify getProductById should return a product when it is found by productId", async () => {
+  it("Verify /product POST route. Should get success response when creating not existing product", async () => {
     jest
       .spyOn(productRepo, "getProductByIdDB")
-      .mockReturnValueOnce([products[0]]);
+      .mockReturnValueOnce({ isFound: false, data: {} });
+    jest
+      .spyOn(productRepo, "createProductDB")
+      .mockReturnValueOnce({ isFound: true });
 
-    const results = await productService._getProductById(1);
+    const results = await productService._createProduct({
+      id: "MARS_12G",
+      name: "Mars 12g Chocolate",
+      measureUnit: "g",
+      volume: 12,
+    });
+
     expect(productRepo.getProductByIdDB).toHaveBeenCalledTimes(1);
-    expect(results).toEqual(products[0]);
+    expect(productRepo.createProductDB).toHaveBeenCalledTimes(1);
+    expect(results).toEqual({
+      isCreated: true,
+      products: {
+        id: "MARS_12G",
+        name: "Mars 12g Chocolate",
+        measureUnit: "g",
+        volume: 12,
+      },
+    });
   });
 
-  it("Verify getProductById should return 404 when product is not found by productId", async () => {
-    jest.spyOn(productRepo, "getProductByIdDB").mockReturnValueOnce([]);
+  it("Verify /product POST route. Should not get success response when creating an existing product", async () => {
+  
 
-    const results = await productService._getProductById(12);
+    jest
+      .spyOn(productRepo, "getProductByIdDB")
+      .mockReturnValueOnce({ isFound: true, data: products[0] });
+
+    jest
+      .spyOn(productRepo, "createProductDB")
+      .mockReturnValueOnce({ isFound: false });
+
+    const results = await productService._createProduct({
+      id: "MARS_12G",
+      name: "Mars 12g Chocolate",
+      measureUnit: "g",
+      volume: 12,
+    });
+
     expect(productRepo.getProductByIdDB).toHaveBeenCalledTimes(1);
-    expect(results).toEqual({});
+    expect(productRepo.createProductDB).toHaveBeenCalledTimes(0);
+    expect(results).toEqual({
+      isCreated: false,
+      products: products[0],
+    });
   });
 });

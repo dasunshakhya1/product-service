@@ -26,10 +26,17 @@ export const getProduct = async (req, res, next) => {
 };
 
 export const addProduct = (req, res, next) => {
-  const { name, price } = req.body;
-  _createProduct({ name, price })
+  const { id, name, measureUnit, volume } = req.body;
+  _createProduct({ id, name, measureUnit, volume })
     .then((product) => {
-      res.status(201).send({ product });
+      if (product.isCreated) {
+           res.status(201).send({products:product.products });
+      } else {
+         res
+           .status(409)
+           .send({ message: `Product with ${id} exist` });
+      }
+   
     })
     .catch((err) => next(err));
 };
