@@ -5,4 +5,12 @@ CREATE TABLE product(
     product_volume DOUBLE NOT NULL
 );
 
-create table stocks(stock_id int primary key AUTO_INCREMENT,product_id int,min int not null default 0,max int not null default 0,current int not null default 0,threshold int not null)
+
+CREATE TABLE stock(
+    product_id VARCHAR(10) PRIMARY KEY,
+    measure_unit VARCHAR(5) NOT NULL,
+    min_volume DOUBLE NOT NULL,
+    max_volume DOUBLE NOT NULL,
+    reorder_threshold DOUBLE NOT NULL,
+    current_volume DOUBLE NOT NULL
+)

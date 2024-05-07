@@ -132,4 +132,18 @@ describe("Verify product service", () => {
       products: {},
     });
   });
+
+  it("Verify /product GET route.Should get success response with data", async () => {
+    jest
+      .spyOn(productRepo, "getAllProductDB")
+      .mockReturnValueOnce({ isFound: true, data: products });
+
+    const results = await productService._getAllProducts();
+
+    expect(productRepo.getAllProductDB).toHaveBeenCalledTimes(1);
+    expect(results).toEqual({
+      isFound: true,
+      products: products,
+    });
+  });
 });
