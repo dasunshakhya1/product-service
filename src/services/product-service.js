@@ -22,18 +22,17 @@ export const _createProduct = async ({ id, name, measureUnit, volume }) => {
   if (isFound) {
     return { isCreated: false, products: data };
   } else {
-    const { isFound } = await createProductDB({
+    await createProductDB({
       id,
       name,
       measureUnit,
       volume,
     });
-    if (isFound) {
-      return {
-        isCreated: isFound,
-        products: { id, name, measureUnit, volume },
-      };
-    }
+
+    return {
+      isCreated: true,
+      products: { id, name, measureUnit, volume },
+    };
   }
 };
 
