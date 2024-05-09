@@ -29,8 +29,19 @@ export const createStockDB = async ({
 
   const rows = await executeQuery(query);
 
-   if (rows.affectedRows == 1) {
-     return returnData(true, rows.insertId);
-   }
-   return returnData(false, {});
+  if (rows.affectedRows == 1) {
+    return returnData(true, rows.insertId);
+  }
+  return returnData(false, {});
+};
+
+export const getStocksDB = async () => {
+  const query = `SELECT * FROM supermart.stock`;
+  const rows = await executeQuery(query);
+
+  if (rows.length > 0) {
+    return returnData(true, rows);
+  } else {
+    return returnData(false, {});
+  }
 };

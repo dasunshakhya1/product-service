@@ -1,4 +1,23 @@
-import { _addStock } from "../services/stock-service";
+import { _addStock, _getStockByProductId, _getStocks } from "../services/stock-service";
+
+export const getStockByProductId = async (req, res, next) => {
+  const product_id = req.params.product_id;
+  const { isFound, stock, message } = await _getStockByProductId(product_id);
+  if (isFound) {
+    res.status(200).send({ isFound, stock, message });
+  } else {
+    res.status(404).send({ isFound, stock, message });
+  }
+};
+
+export const getStocks = async (req, res, next) => {
+  const { isFound, stock, message } = await _getStocks();
+  if (isFound) {
+    res.status(200).send({ isFound, stock, message });
+  } else {
+    res.status(404).send({ isFound, stock, message });
+  }
+};
 
 export const addStock = async (req, res, next) => {
   const {
